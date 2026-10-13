@@ -20,6 +20,13 @@ func NewUserDomain(
 	}
 }
 
+func NewUpdateUserDomain(name string, age int8) UserDomainInterface {
+	return &userDomain{
+		name: name,
+		age:  age,
+	}
+}
+
 func (ud *userDomain) GetID() string {
 	return ud.id
 }

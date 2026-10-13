@@ -5,7 +5,6 @@ import (
 	"github.com/rodrigobastos42/crud-go/src/model"
 )
 
-func (ud *userDomainService) FindUser(userId string) (*model.UserDomainInterface, *internalerrors.RestErr) {
-
-	return nil, nil
+func (ud *userDomainService) FindUserByID(id string) (*model.UserDomainInterface, *internalerrors.RestErr) {
+	return ud.repository.FindUserByID(id)
 }
