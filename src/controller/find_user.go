@@ -26,5 +26,5 @@ func (uc *userController) FindUserById(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, view.ConvertDomainToResponse(*userDomain))
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(userDomain))
 }

@@ -8,8 +8,9 @@ import (
 
 type UserRepository interface {
 	CreateUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *internalerrors.RestErr)
-	FindUserByID(id string) (*model.UserDomainInterface, *internalerrors.RestErr)
-	FindUserByEmail(email string) (*model.UserDomainInterface, *internalerrors.RestErr)
+	FindUserByID(id string) (model.UserDomainInterface, *internalerrors.RestErr)
+	FindUserByEmail(email string) (model.UserDomainInterface, *internalerrors.RestErr)
+	FindUserByEmailAndEncryptPassword(email, password string) (model.UserDomainInterface, *internalerrors.RestErr)
 	UpdateUser(id string, user model.UserDomainInterface) *internalerrors.RestErr
 	DeleteUser(id string) *internalerrors.RestErr
 }

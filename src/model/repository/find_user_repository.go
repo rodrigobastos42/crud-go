@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-func (ur *userRepository) FindUserByID(id string) (*model.UserDomainInterface, *internalerrors.RestErr) {
+func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *internalerrors.RestErr) {
 	collectionName := os.Getenv("MONGODB_DATABASE")
 
 	collection := ur.databaseConnection.Collection(collectionName)
@@ -34,10 +34,10 @@ func (ur *userRepository) FindUserByID(id string) (*model.UserDomainInterface, *
 		return nil, internalerrors.NewInternalServerError(errorMessage)
 	}
 
-	return converter.ConvertEntityToDomain(*user), nil
+	return converter.ConvertEntityToDomain(user), nil
 }
 
-func (ur *userRepository) FindUserByEmail(email string) (*model.UserDomainInterface, *internalerrors.RestErr) {
+func (ur *userRepository) FindUserByEmail(email string) (model.UserDomainInterface, *internalerrors.RestErr) {
 	collectionName := os.Getenv("MONGODB_DATABASE")
 
 	collection := ur.databaseConnection.Collection(collectionName)
@@ -56,5 +56,30 @@ func (ur *userRepository) FindUserByEmail(email string) (*model.UserDomainInterf
 		return nil, internalerrors.NewInternalServerError(errorMessage)
 	}
 
-	return converter.ConvertEntityToDomain(*user), nil
+	return converter.ConvertEntityToDomain(user), nil
+}
+
+func (ur *userRepository) FindUserByEmailAndEncryptPassword(email, password string) (model.UserDomainInterface, *internalerrors.RestErr) {
+	collectionName := os.Getenv("MONGODB_DATABASE")
+
+	collection := ur.databaseConnection.Collection(collectionName)
+
+	user := &entity.UserEntity{}
+	filter := bson.M{
+		"email":    email,
+		"password": password,
+	}
+
+	err := collection.FindOne(context.Background(), filter).Decode(user)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			errorMessage := "email or password is invalid"
+			return nil, internalerrors.NewForbiddenError(errorMessage)
+		}
+		errorMessage := "Error trying to find user by email and password"
+		return nil, internalerrors.NewInternalServerError(errorMessage)
+	}
+
+	return converter.ConvertEntityToDomain(user), nil
 }

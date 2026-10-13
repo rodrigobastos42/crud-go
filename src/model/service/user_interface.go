@@ -8,9 +8,10 @@ import (
 
 type UserDomainService interface {
 	CreateUser(user model.UserDomainInterface) (model.UserDomainInterface, *internalerrors.RestErr)
-	FindUserByID(id string) (*model.UserDomainInterface, *internalerrors.RestErr)
+	FindUserByID(id string) (model.UserDomainInterface, *internalerrors.RestErr)
 	UpdateUser(userId string, user model.UserDomainInterface) *internalerrors.RestErr
 	DeleteUser(userId string) *internalerrors.RestErr
+	Login(user model.UserDomainInterface) (model.UserDomainInterface, string, *internalerrors.RestErr)
 }
 
 type userDomainService struct {

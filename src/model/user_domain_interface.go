@@ -1,5 +1,7 @@
 package model
 
+import internalerrors "github.com/rodrigobastos42/crud-go/src/configuration/internal_errors"
+
 type UserDomainInterface interface {
 	GetID() string
 	GetEmail() string
@@ -10,4 +12,5 @@ type UserDomainInterface interface {
 	SetID(id string)
 
 	EncryptPassword()
+	GenerateToken() (string, *internalerrors.RestErr)
 }

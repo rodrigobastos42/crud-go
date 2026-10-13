@@ -1,13 +1,5 @@
 package model
 
-type userDomain struct {
-	id       string
-	email    string
-	password string
-	name     string
-	age      int8
-}
-
 func NewUserDomain(
 	email, password, name string,
 	age int8,
@@ -25,6 +17,21 @@ func NewUpdateUserDomain(name string, age int8) UserDomainInterface {
 		name: name,
 		age:  age,
 	}
+}
+
+func NewUserLoginDomain(email, password string) UserDomainInterface {
+	return &userDomain{
+		email:    email,
+		password: password,
+	}
+}
+
+type userDomain struct {
+	id       string
+	email    string
+	password string
+	name     string
+	age      int8
 }
 
 func (ud *userDomain) GetID() string {

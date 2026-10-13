@@ -24,5 +24,5 @@ func (ur *userRepository) CreateUser(user model.UserDomainInterface) (model.User
 
 	value.ID = result.InsertedID.(primitive.ObjectID)
 
-	return *converter.ConvertEntityToDomain(*value), nil
+	return converter.ConvertEntityToDomain(value), nil
 }
