@@ -14,12 +14,16 @@ func (ud *userDomainService) CreateUser(user model.UserDomainInterface) (model.U
 
 	user.EncryptPassword()
 
+	emailAlreadyRegistered, _ := ud.repository.FindUserByEmail(user.GetEmail())
+
+	if emailAlreadyRegistered != nil {
+		return nil, internalerrors.NewBadRequestError(fmt.Sprintf("Email %v already registered", user.GetEmail()))
+	}
+
 	createdUser, err := ud.repository.CreateUser(user)
 
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("USER: ", createdUser)
 	return createdUser, nil
 }

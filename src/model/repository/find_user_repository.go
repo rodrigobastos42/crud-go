@@ -36,3 +36,25 @@ func (ur *userRepository) FindUserByID(id string) (*model.UserDomainInterface, *
 
 	return converter.ConvertEntityToDomain(*user), nil
 }
+
+func (ur *userRepository) FindUserByEmail(email string) (*model.UserDomainInterface, *internalerrors.RestErr) {
+	collectionName := os.Getenv("MONGODB_DATABASE")
+
+	collection := ur.databaseConnection.Collection(collectionName)
+
+	user := &entity.UserEntity{}
+	filter := bson.M{"email": email}
+
+	err := collection.FindOne(context.Background(), filter).Decode(user)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			errorMessage := fmt.Sprintf("User not found with this email: %s", email)
+			return nil, internalerrors.NewNotFoundError(errorMessage)
+		}
+		errorMessage := "Error trying to find user by email"
+		return nil, internalerrors.NewInternalServerError(errorMessage)
+	}
+
+	return converter.ConvertEntityToDomain(*user), nil
+}
